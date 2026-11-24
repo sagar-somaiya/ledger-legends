@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#10251d" />
+  <link rel="icon" type="image/png" href="./favicon.svg" />
+  <meta property="og:image" content="https://d2ol7oe51mr4n9.cloudfront.net/user_3J7iyp9l3HqUQcdjbXjWVdeyGZk/8fb566bd-afd8-48ab-869d-f0e3e235908f.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="description" content="Choose Bubu or Dudu, stay connected by a rope and leap through six cinematic adventure stages." />
+  <meta property="og:title" content="BUBU & DUDU: ADVENTURE RUN" />
+  <meta property="og:description" content="Two fluffy bears. One rope. Six wild adventures." />
+  <meta property="og:type" content="website" />
+  <title>BUBU & DUDU: ADVENTURE RUN</title>
+  <style>
+    :root{color-scheme:dark;--ink:#f7f4e9;--muted:#b7c6b6;--mint:#9fe2b2;--gold:#ffd778;--panel:rgba(10,28,21,.84);--line:rgba(228,244,220,.18)}
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0d2119;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;touch-action:none;overscroll-behavior:none}
+    button{font:inherit;color:inherit;border:0;cursor:pointer;touch-action:manipulation}
+    #app{position:relative;width:100%;height:100dvh;min-height:100%;overflow:hidden;background:radial-gradient(ellipse at 50% 0%,#315b3d 0%,#142d22 60%,#0b1b15 100%)}
+    #gameCanvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+    .vignette{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(3,13,9,.42),transparent 24%,transparent 70%,rgba(3,13,9,.52));z-index:1}
+    .topbar{position:absolute;z-index:3;top:max(12px,env(safe-area-inset-top));left:14px;right:14px;display:flex;align-items:center;justify-content:space-between;gap:8px;pointer-events:none}
+    .brand{display:flex;align-items:center;gap:9px;font-weight:950;letter-spacing:.04em;text-shadow:0 2px 12px #07130e;font-size:clamp(12px,2.8vw,17px)}
+    .brand-mark{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(145deg,#f6d68d,#e7a65c);box-shadow:0 4px 18px #08160f88;color:#402c1d;font-size:20px}
+    .top-actions{display:flex;gap:7px;pointer-events:auto}
+    .icon-btn{width:38px;height:38px;border-radius:13px;background:rgba(7,22,16,.62);border:1px solid var(--line);backdrop-filter:blur(10px);font-size:17px}
+    .pill{padding:8px 12px;border-radius:999px;background:rgba(7,22,16,.64);border:1px solid var(--line);font-size:12px;font-weight:800;backdrop-filter:blur(10px)}
+    #stageLabel{position:absolute;z-index:2;top:62px;left:50%;transform:translateX(-50%);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#eff7df;text-shadow:0 2px 10px #08160f;white-space:nowrap;opacity:.9}
+    .overlay{position:absolute;z-index:5;inset:0;display:flex;align-items:center;justify-content:center;padding:74px 18px 24px;background:linear-gradient(180deg,rgba(5,17,12,.22),rgba(5,17,12,.52));backdrop-filter:blur(3px)}
+    .panel{width:min(620px,100%);max-height:100%;overflow:auto;border:1px solid rgba(231,245,219,.2);border-radius:28px;padding:clamp(18px,4vw,30px);background:linear-gradient(145deg,rgba(24,53,38,.96),rgba(9,26,19,.96));box-shadow:0 28px 90px #020a06aa,inset 0 1px rgba(255,255,255,.1);text-align:center}
+    .eyebrow{font-size:10px;font-weight:900;letter-spacing:.24em;color:var(--mint);text-transform:uppercase}
+    h1{font-size:clamp(27px,7vw,54px);line-height:.95;letter-spacing:-.055em;margin:10px 0 8px;font-weight:1000;text-shadow:0 4px 22px #0008}
+    h1 span{color:var(--gold)}
+    .subtitle{color:#c7d8c7;font-size:clamp(12px,2.8vw,15px);margin:0 auto 18px;max-width:430px;line-height:1.5}
+    .bear-picks{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+    .bear-card{position:relative;min-height:150px;border:1px solid rgba(231,245,219,.18);border-radius:20px;background:linear-gradient(160deg,rgba(255,255,255,.08),rgba(255,255,255,.02));padding:10px 8px 12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;transition:.18s transform,.18s border-color,.18s background}
+    .bear-card.selected{border-color:#f7d27c;background:linear-gradient(160deg,rgba(255,215,120,.19),rgba(255,255,255,.04));transform:translateY(-3px);box-shadow:0 8px 24px #f5c86b22}
+    .bear-card strong{font-size:15px}.bear-card small{font-size:10px;color:#b8c8b9}
+    .bear-art{width:92px;height:92px;display:block;filter:drop-shadow(0 8px 7px #0006)}
+    .primary{width:100%;padding:15px 20px;border-radius:16px;background:linear-gradient(135deg,#f8d98f,#eab56d);color:#342717;font-weight:1000;font-size:15px;letter-spacing:.04em;box-shadow:0 8px 24px #dca65a33}
+    .secondary{padding:11px 16px;border-radius:14px;background:rgba(255,255,255,.08);border:1px solid var(--line);font-weight:800;font-size:12px}
+    .hint{color:#aebfae;font-size:10px;margin:12px 0 0}
+    #stagePanel .panel{width:min(650px,100%)}
+    .stage-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:18px 0}
+    .stage-card{min-height:94px;padding:12px 7px;border-radius:17px;border:1px solid var(--line);background:rgba(255,255,255,.045);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+    .stage-card:disabled{opacity:.32;filter:grayscale(1);cursor:not-allowed}
+    .stage-card.current{border-color:#f6d17e;background:rgba(246,209,126,.13)}
+    .stage-emoji{font-size:25px}.stage-name{font-size:11px;font-weight:900}.stage-sub{font-size:9px;color:#adc1af}
+    #winPanel .panel{width:min(440px,100%)}
+    .win-star{font-size:48px;margin:4px 0}
+    .win-actions{display:flex;gap:9px;margin-top:14px}.win-actions button{flex:1}
+    #controls{position:absolute;z-index:4;left:0;right:0;bottom:max(16px,env(safe-area-inset-bottom));display:none;align-items:flex-end;justify-content:space-between;padding:0 22px;pointer-events:none}
+    #controls.visible{display:flex}
+    .stick-base{width:116px;height:116px;border-radius:50%;background:rgba(8,25,18,.45);border:1px solid rgba(255,255,255,.24);backdrop-filter:blur(5px);position:relative;pointer-events:auto;touch-action:none;box-shadow:inset 0 3px 16px #0004}
+    .stick-knob{position:absolute;left:50%;top:50%;width:49px;height:49px;border-radius:50%;transform:translate(-50%,-50%);background:linear-gradient(145deg,#f9e5b2,#d9a96c);border:2px solid #fff8;box-shadow:0 5px 14px #0006}
+    .action-stack{display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:auto}
+    .jump-btn{width:82px;height:82px;border-radius:50%;background:linear-gradient(145deg,#f7d98e,#df9c57);border:3px solid rgba(255,255,255,.55);color:#372718;font-weight:1000;font-size:12px;box-shadow:0 7px 22px #0006;touch-action:none}
+    .dash-btn{width:58px;height:42px;border-radius:15px;background:rgba(9,27,19,.72);border:1px solid var(--line);font-size:10px;font-weight:900;touch-action:none}
+    #toast{position:absolute;z-index:8;top:112px;left:50%;transform:translate(-50%,-8px);padding:9px 14px;border-radius:999px;background:rgba(7,21,15,.84);border:1px solid var(--line);font-size:12px;font-weight:800;opacity:0;transition:.2s;pointer-events:none;white-space:nowrap}
+    #toast.show{opacity:1;transform:translate(-50%,0)}
+    .hidden{display:none!important}
+    @media(max-width:600px){.brand{font-size:11px}.brand-mark{width:30px;height:30px}.topbar{left:10px;right:10px}.icon-btn{width:34px;height:34px}.pill{padding:7px 9px;font-size:10px}.overlay{padding:65px 12px 14px}.panel{border-radius:22px}.bear-card{min-height:132px}.bear-art{width:78px;height:78px}.stick-base{width:102px;height:102px}.stick-knob{width:45px;height:45px}.jump-btn{width:74px;height:74px}#controls{padding:0 18px}}
+    @media(orientation:landscape) and (max-height:500px){.overlay{padding:50px 12px 10px}.panel{padding:13px 20px}.bear-picks{margin:8px 0}.bear-card{min-height:105px}.bear-art{width:60px;height:60px}h1{font-size:32px}.subtitle{margin-bottom:8px}.stick-base{width:86px;height:86px}.stick-knob{width:40px;height:40px}.jump-btn{width:68px;height:68px}#controls{bottom:8px}}
+    @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+  </style>
+</head>
+<body>
+<div id="app">
+  <canvas id="gameCanvas" aria-label="Bubu and Dudu adventure game"></canvas>
+  <div class="vignette"></div>
+  <div class="topbar">
+    <div class="brand"><div class="brand-mark">🐻</div><span>BUBU & DUDU <span style="color:#f5d58a">ADVENTURE RUN</span></span></div>
+    <div class="top-actions"><span class="pill" id="starCount">☆ 0</span><button class="icon-btn" id="soundBtn" aria-label="Toggle sound">♫</button><button class="icon-btn" id="pauseBtn" aria-label="Pause game">Ⅱ</button></div>
+  </div>
+  <div id="stageLabel" class="hidden">STAGE 01 · FOREST TRAIL</div>
+  <div id="toast"></div>
+
+  <section id="menu" class="overlay">
+    <div class="panel">
+      <div class="eyebrow">A two-bear adventure</div>
+      <h1>BUBU & DUDU<br><span>ADVENTURE RUN</span></h1>
+      <p class="subtitle">Pick your hero, grab the rope and make it through the wild. Two bears, one big adventure!</p>
+      <div class="eyebrow">Choose your lead bear</div>
+      <div class="bear-picks">
+        <button class="bear-card selected" data-character="bubu"><svg class="bear-art" viewBox="0 0 120 120" aria-hidden="true"><defs><linearGradient id="cream" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fffdf0"/><stop offset="1" stop-color="#d9c9a9"/></linearGradient></defs><ellipse cx="60" cy="105" rx="35" ry="7" fill="#000" opacity=".22"/><circle cx="32" cy="28" r="15" fill="url(#cream)"/><circle cx="88" cy="28" r="15" fill="url(#cream)"/><ellipse cx="60" cy="64" rx="39" ry="43" fill="url(#cream)"/><ellipse cx="60" cy="76" rx="23" ry="18" fill="#f4e7cc"/><circle cx="47" cy="56" r="3.5" fill="#342b25"/><circle cx="73" cy="56" r="3.5" fill="#342b25"/><ellipse cx="60" cy="68" rx="6" ry="4.5" fill="#4c3a31"/><path d="M55 74q5 6 10 0" fill="none" stroke="#75594a" stroke-width="2" stroke-linecap="round"/><ellipse cx="34" cy="91" rx="11" ry="9" fill="#d9c9a9"/><ellipse cx="86" cy="91" rx="11" ry="9" fill="#d9c9a9"/></svg><strong>BUBU</strong><small>Brave · Cream bear</small></button>
+        <button class="bear-card" data-character="dudu"><svg class="bear-art" viewBox="0 0 120 120" aria-hidden="true"><defs><linearGradient id="cocoa" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#9b6747"/><stop offset="1" stop-color="#4c2e22"/></linearGradient></defs><ellipse cx="60" cy="105" rx="35" ry="7" fill="#000" opacity=".22"/><circle cx="32" cy="28" r="15" fill="url(#cocoa)"/><circle cx="88" cy="28" r="15" fill="url(#cocoa)"/><ellipse cx="60" cy="64" rx="39" ry="43" fill="url(#cocoa)"/><ellipse cx="60" cy="76" rx="23" ry="18" fill="#c18b66"/><circle cx="47" cy="56" r="3.5" fill="#20140f"/><circle cx="73" cy="56" r="3.5" fill="#20140f"/><ellipse cx="60" cy="68" rx="6" ry="4.5" fill="#302019"/><path d="M55 74q5 6 10 0" fill="none" stroke="#6d4431" stroke-width="2" stroke-linecap="round"/><ellipse cx="34" cy="91" rx="11" ry="9" fill="#4c2e22"/><ellipse cx="86" cy="91" rx="11" ry="9" fill="#4c2e22"/></svg><strong>DUDU</strong><small>Playful · Cocoa bear</small></button>
+      </div>
+      <button class="primary" id="startBtn">START ADVENTURE <span>➜</span></button>
+      <p class="hint">Move with the joystick · Jump over obstacles · Keep your buddy close!</p>
+    </div>
+  </section>
+
+  <section id="stagePanel" class="overlay hidden">
+    <div class="panel"><div class="eyebrow">Your journey awaits</div><h1>CHOOSE A <span>STAGE</span></h1><p class="subtitle">Every trail brings a new challenge. Clear a stage to unlock the next one.</p><div class="stage-grid" id="stageGrid"></div><button class="secondary" id="backMenu">← Change bear</button></div>
+  </section>
+
+  <section id="winPanel" class="overlay hidden">
+    <div class="panel"><div class="eyebrow">Stage complete</div><div class="win-star" id="winStars">⭐ ⭐ ⭐</div><h1>YOU DID <span>IT!</span></h1><p class="subtitle" id="winMessage">Bubu and Dudu made it across!</p><div class="win-actions"><button class="secondary" id="replayBtn">↻ Replay</button><button class="primary" id="nextBtn">NEXT STAGE ➜</button></div><button class="secondary" id="stageMenuBtn" style="margin-top:10px;width:100%">All stages</button></div>
+  </section>
+
+  <div id="controls">
+    <div class="stick-base" id="stickBase" aria-label="Movement joystick"><div class="stick-knob" id="stickKnob"></div></div>
+    <div class="action-stack"><button class="dash-btn" id="dashBtn">RUN FAST</button><button class="jump-btn" id="jumpBtn">JUMP<br>↑</button></div>
+  </div>
+</div>
+<script type="module" src="./client.js"></script>
+</body>
+</html>
